@@ -1,3 +1,5 @@
+# NextJS-Cognito-App-Shell #
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 It includes a cloud formation yaml and surrounding bash script to headlessly make your user pool. You may want to edit the aws-infrastructure components to put better prefixes on assets that better fit your planned app.
@@ -16,7 +18,7 @@ $ cp .env.sample .env
 $ npm run dev
 ```
 
-If yo are using different tools other than NPM, you can run the dev server in other ways...
+If you are using different tools other than NPM, you can run the dev server in other ways...
 
 ```bash
 npm run dev
