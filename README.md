@@ -10,19 +10,19 @@ I'll eventually put a link in to the youTube video I used and copied from to giv
 
 Basically, six steps right now, though again, you may want to edit the aws-infrastructure components as well to put better prefixes on assets that better fit your planned app.
 ```
-$ npm install
-
-$ cd aws-infrastructure-as-code
+npm install
 
 # Script assumes you are up-to-date with AWS CLI and have your favorite 
 # account/ID profile active. There are various commands to explore which 
 # account will be referenced by "$ aws" commands.
-$ ./deploy-cognito-auth.sh
+cd aws-infrastructure-as-code
+./deploy-cognito-auth.sh
+cd ..
 
-$ cp .env.sample .env
-
+cp .env.sample .env
 # MANUAL STEP: Edit the .env file to include the NEXT_USER_POOL_ID and the NEXT_USER_POOL_CLIENT_ID values.
 
+# Launch it to localhost:3000
 $ npm run dev
 ```
 
