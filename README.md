@@ -4,7 +4,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 It includes a cloud formation yaml and surrounding bash script to headlessly make your user pool. You may want to edit the aws-infrastructure components to put better prefixes on assets that better fit your planned app.
 
-I'll eventually put a link in to the youTube video I used and copied from to give the YouTuber proper credit, but I am in a rush today.
+Huge thanks to Alex Ruskin and his [Step-by-Step NextJS Auth Setup with AWS Cognito](https://youtu.be/wiWDOgIu7cU?si=CzEyA1PqNKEd-dEQ) YouTube video. A super clean and organized way to introduce Cognito to the shell app. Subscribe to [Alex's channel on YouTube](https://www.youtube.com/@alexrusin) for more great learnin'.
 
 ## Getting Started
 
