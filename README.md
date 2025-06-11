@@ -23,7 +23,7 @@ cp .env.sample .env
 # MANUAL STEP: Edit the .env file to include the NEXT_USER_POOL_ID and the NEXT_USER_POOL_CLIENT_ID values.
 
 # Launch it to localhost:3000
-$ npm run dev
+npm run dev
 ```
 
 If you are using different tools other than NPM, you can run the dev server in other ways...
