@@ -1,0 +1,214 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/awslabs/goformation/master/schema/cloudformation.schema.json
+##################################################################################
+#
+#
+# CloudFormation template that includes:
+#
+# ✅ Cognito User Pool
+# ✅ User Pool App Client
+# ✅ Identity Pool
+# ✅ IAM Roles for authenticated and unauthenticated users
+# ✅ Support for a custom domain (with a parameter for your domain prefix)
+#
+#  To deploy it using the AWS CLI:
+#
+#    aws cloudformation deploy \
+#      --template-file cognito-auth.yaml \
+#      --stack-name asi-auth-stack \
+#      --capabilities CAPABILITY_NAMED_IAM \
+#      --parameter-overrides ProjectName=asiApp DomainPrefix=asi-login
+#
+# ✅ Hosted UI will be available at:
+#
+# https://asi-login.auth.us-east-1.amazoncognito.com/login
+# 🔒 IAM roles allow authenticated/unauthenticated access to your app via Cognito.
+# 🎯 Callback and logout URLs can be adjusted to your app domain.
+#
+##################################################################################
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Cognito User Pool, Identity Pool, IAM Roles, and Custom Domain
+
+Parameters:
+  ProjectName:
+    Type: String
+    Description: A unique name for this project
+    Default: DemoApp
+
+  DomainPrefix:
+    Type: String
+    Description: Custom domain prefix for Cognito-hosted UI (e.g., "demoapp-login")
+
+Resources:
+
+  # Cognito User Pool
+  UserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: !Sub '${ProjectName}-userpool'
+      AutoVerifiedAttributes: [email]
+      UsernameAttributes: [email]
+      Schema:
+        - Name: email
+          Required: true
+          Mutable: true
+        - Name: name
+          AttributeDataType: String
+          Mutable: true
+          Required: true
+          StringAttributeConstraints:
+            MinLength: "1"
+            MaxLength: "50"
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+          RequireUppercase: true
+          RequireLowercase: true
+          RequireNumbers: true
+          RequireSymbols: false
+
+  # User Groups
+  FreeTierGroup:
+    Type: AWS::Cognito::UserPoolGroup
+    Properties:
+      GroupName: FreeTier
+      UserPoolId: !Ref UserPool
+      Description: Default group for all new users
+
+  PaidTierGroup:
+    Type: AWS::Cognito::UserPoolGroup
+    Properties:
+      GroupName: PaidTier
+      UserPoolId: !Ref UserPool
+      Description: Premium subscription group
+
+  AdminsGroup:
+    Type: AWS::Cognito::UserPoolGroup
+    Properties:
+      GroupName: Admins
+      UserPoolId: !Ref UserPool
+      Description: Admin users for elevated privileges
+
+  # Cognito User Pool Client
+  UserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      ClientName: !Sub '${ProjectName}-client'
+      UserPoolId: !Ref UserPool
+      GenerateSecret: false
+      ExplicitAuthFlows:
+        - ALLOW_USER_PASSWORD_AUTH
+        - ALLOW_REFRESH_TOKEN_AUTH
+        - ALLOW_CUSTOM_AUTH
+        - ALLOW_USER_SRP_AUTH      
+      AllowedOAuthFlowsUserPoolClient: true
+      AllowedOAuthFlows:
+        - code
+      AllowedOAuthScopes:
+        - email
+        - openid
+        - profile
+      CallbackURLs:
+        - http://localhost:3000/callback
+      LogoutURLs:
+        - http://localhost:3000
+      SupportedIdentityProviders:
+        - COGNITO
+
+  # Cognito Domain (hosted UI)
+  UserPoolDomain:
+    Type: AWS::Cognito::UserPoolDomain
+    Properties:
+      Domain: !Ref DomainPrefix
+      UserPoolId: !Ref UserPool
+
+  # Identity Pool
+  IdentityPool:
+    Type: AWS::Cognito::IdentityPool
+    Properties:
+      IdentityPoolName: !Sub '${ProjectName}-identitypool'
+      AllowUnauthenticatedIdentities: false
+      CognitoIdentityProviders:
+        - ClientId: !Ref UserPoolClient
+          ProviderName: !GetAtt UserPool.ProviderName
+
+  # Authenticated IAM Role
+  AuthRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${ProjectName}-auth-role'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: cognito-identity.amazonaws.com
+            Action: sts:AssumeRoleWithWebIdentity
+            Condition:
+              StringEquals:
+                cognito-identity.amazonaws.com:aud: !Ref IdentityPool
+              "ForAnyValue:StringLike":
+                cognito-identity.amazonaws.com:amr: authenticated
+      Policies:
+        - PolicyName: AllowBasicCognito
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: ["mobileanalytics:PutEvents", "cognito-sync:*", "cognito-identity:*"]
+                Resource: "*"
+
+  # Unauthenticated IAM Role
+  UnauthRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${ProjectName}-unauth-role'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: cognito-identity.amazonaws.com
+            Action: sts:AssumeRoleWithWebIdentity
+            Condition:
+              StringEquals:
+                cognito-identity.amazonaws.com:aud: !Ref IdentityPool
+              "ForAnyValue:StringLike":
+                cognito-identity.amazonaws.com:amr: unauthenticated
+      Policies:
+        - PolicyName: AllowBasicCognito
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: ["mobileanalytics:PutEvents", "cognito-sync:*"]
+                Resource: "*"
+
+  # Attach IAM Roles to Identity Pool
+  IdentityPoolRoleAttachment:
+    Type: AWS::Cognito::IdentityPoolRoleAttachment
+    Properties:
+      IdentityPoolId: !Ref IdentityPool
+      Roles:
+        authenticated: !GetAtt AuthRole.Arn
+        unauthenticated: !GetAtt UnauthRole.Arn
+
+Outputs:
+  UserPoolId:
+    Value: !Ref UserPool
+    Export:
+      Name: !Sub '${ProjectName}-UserPoolId'
+
+  UserPoolClientId:
+    Value: !Ref UserPoolClient
+    Export:
+      Name: !Sub '${ProjectName}-UserPoolClientId'
+
+  IdentityPoolId:
+    Value: !Ref IdentityPool
+    Export:
+      Name: !Sub '${ProjectName}-IdentityPoolId'
+
+  HostedUIDomain:
+    Value: !Sub 'https://${DomainPrefix}.auth.${AWS::Region}.amazoncognito.com'
+    Export:
+      Name: !Sub '${ProjectName}-CognitoDomain'
