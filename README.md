@@ -8,7 +8,7 @@ I'll eventually put a link in to the youTube video I used and copied from to giv
 
 ## Getting Started
 
-Basically, six steps right now, though again, you may want to edit the aws-infrastructure components as well to put better prefixes on assets that better fit your planned app.
+Not completely automated, but only a few simple steps right now, though again, you may want to edit the aws-infrastructure components as well to put better prefixes on assets that better fit your planned app.
 ```
 npm install
 
