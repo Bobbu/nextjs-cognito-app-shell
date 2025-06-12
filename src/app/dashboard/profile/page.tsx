@@ -2,7 +2,7 @@ import { lusitana } from "@/ui/fonts";
 import UpdateProfileForm from "@/ui/profile-settings/update-profile-form";
 import UpdatePasswordForm from "@/ui/profile-settings/update-password-form";
 import UpdateEmailForm from "@/ui/profile-settings/update-email-form";
-
+import ThemeSwitch from "@/app/components/ThemeSwitch";
 export default function Profile() {
   return (
     <main>
@@ -15,6 +15,9 @@ export default function Profile() {
       </div>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mt-8">
         <UpdateEmailForm />
+      </div>
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mt-8">
+        <ThemeSwitch />
       </div>
     </main>
   );

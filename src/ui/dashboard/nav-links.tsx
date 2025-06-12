@@ -12,17 +12,13 @@ import { usePathname } from "next/navigation";
 
 export default function NavLinks() {
   const user = useAuthUser();
+  const pathname = usePathname();
+
   const links = [
     { name: "Home", href: "/dashboard", icon: HomeIcon },
-    {
-      name: "Invoices",
-      href: "/dashboard/invoices",
-      icon: DocumentDuplicateIcon,
-    },
+    { name: "Invoices", href: "/dashboard/invoices", icon: DocumentDuplicateIcon },
     { name: "Customers", href: "/dashboard/customers", icon: UserGroupIcon },
   ];
-
-  const pathname = usePathname();
 
   if (user && user.isAdmin) {
     links.push({
@@ -31,26 +27,27 @@ export default function NavLinks() {
       icon: BuildingOfficeIcon,
     });
   }
+
   return (
     <>
-      {links.map((link) => {
-        const LinkIcon = link.icon;
-        return (
-          <Link
-            key={link.name}
-            href={link.href}
-            className={clsx(
-              "flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3",
-              {
-                "bg-sky-100 text-blue-600": pathname === link.href,
-              }
-            )}
-          >
-            <LinkIcon className="w-6" />
-            <p className="hidden md:block">{link.name}</p>
-          </Link>
-        );
-      })}
+      {links.map(({ name, href, icon: Icon }) => (
+        <Link
+          key={name}
+          href={href}
+          className={clsx(
+            "flex items-center gap-2 rounded-md p-2 px-3 text-sm font-medium transition-colors",
+            "bg-gray-50 text-gray-800 hover:bg-sky-100 hover:text-blue-600",
+            "dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 dark:hover:text-white",
+            {
+              "bg-sky-100 text-blue-600 dark:bg-blue-900 dark:text-white":
+                pathname === href,
+            }
+          )}
+        >
+          <Icon className="w-5 h-5" />
+          <span className="hidden md:block">{name}</span>
+        </Link>
+      ))}
     </>
   );
 }

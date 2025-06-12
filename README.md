@@ -6,6 +6,9 @@ It includes a cloud formation yaml and surrounding bash script to headlessly mak
 
 Huge thanks to Alex Ruskin and his [Step-by-Step NextJS Auth Setup with AWS Cognito](https://youtu.be/wiWDOgIu7cU?si=CzEyA1PqNKEd-dEQ) YouTube video. A super clean and organized way to introduce Cognito to the shell app. Subscribe to [Alex's channel on YouTube](https://www.youtube.com/@alexrusin) for more great learnin'.
 
+It appeared that the default NextJS app was a bit challenged when it came to dark mode (e.g., text and label font colors would "disappear" on the SideNav or forms), so we found a nice fix for that. Huge thanks goes to Dave Grey, who provided an excellent post on [Light and Dark Mode in Next.js App router + Tailwind with No Flicker](https://www.davegray.codes/posts/light-dark-mode-nextjs-app-router-tailwind). This post also points you to a short and sweet [YouTube video](https://www.youtube.com/watch?v=7zqI4qMDdg8) that gets you through the essentials. [Dave's channel on YouTube](https://www.youtube.com/@DaveGrayTeachesCode) is another great resource, as is [his blog](https://www.davegray.codes/). 
+
+
 ## Getting Started
 
 Not completely automated, but only a few simple steps right now, though again, you may want to edit the aws-infrastructure components as well to put better prefixes on assets that better fit your planned app.
