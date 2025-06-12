@@ -109,42 +109,50 @@ export async function handleSignOut() {
   redirect("/auth/login");
 }
 
-export async function handleUpdateUserAttribute(
+export async function handleUpdateUserAttributes(
   prevState: string,
   formData: FormData
 ) {
-  let attributeKey = "name";
-  let attributeValue;
-  let currentAttributeValue;
+  const updatableKeys = ["name", "given_name", "family_name", "email"];
+  const updates: { key: string; value: string }[] = [];
 
-  if (formData.get("email")) {
-    attributeKey = "email";
-    attributeValue = formData.get("email");
-    currentAttributeValue = formData.get("current_email");
-  } else {
-    attributeValue = formData.get("name");
-    currentAttributeValue = formData.get("current_name");
+  for (const key of updatableKeys) {
+    const value = formData.get(key);
+    const current = formData.get(`current_${key}`);
+    if (value && value !== current) {
+      updates.push({ key, value: String(value) });
+    }
   }
 
-  if (attributeValue === currentAttributeValue) {
-    return "";
+  if (updates.length === 0) {
+    return ""; // No changes
   }
 
   try {
-    const output = await updateUserAttribute({
-      userAttribute: {
-        attributeKey: String(attributeKey),
-        value: String(attributeValue),
-      },
-    });
-    return handleUpdateUserAttributeNextSteps(output);
+    // Loop through all updates one at a time
+    for (const update of updates) {
+      const output = await updateUserAttribute({
+        userAttribute: {
+          attributeKey: update.key,
+          value: update.value,
+        },
+      });
+
+      // Only name and email trigger confirmation steps; bail early if needed
+      const step = handleUpdateUserAttributesNextSteps(output);
+      if (step !== "success") {
+        return step; // Return confirmation message or error
+      }
+    }
+
+    return "success";
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return "error";
   }
 }
 
-function handleUpdateUserAttributeNextSteps(output: UpdateUserAttributeOutput) {
+function handleUpdateUserAttributesNextSteps(output: UpdateUserAttributeOutput) {
   const { nextStep } = output;
 
   switch (nextStep.updateAttributeStep) {

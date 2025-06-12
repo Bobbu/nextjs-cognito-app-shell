@@ -8,13 +8,13 @@ import { Button } from "@/ui/button";
 import { useFormState, useFormStatus } from "react-dom";
 import {
   handleConfirmUserAttribute,
-  handleUpdateUserAttribute,
+  handleUpdateUserAttributes,
 } from "@/lib/cognitoActions";
 import useAuthUser from "@/app/hooks/use-auth-user";
 
 export default function UpdateEmailForm() {
   const user = useAuthUser();
-  const [status, dispatch] = useFormState(handleUpdateUserAttribute, "");
+  const [status, dispatch] = useFormState(handleUpdateUserAttributes, "");
   const [confirmStatus, dispatchConfirm] = useFormState(
     handleConfirmUserAttribute,
     undefined
