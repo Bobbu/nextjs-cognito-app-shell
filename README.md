@@ -11,6 +11,8 @@ It appeared that the default NextJS app was a bit challenged when it came to dar
 
 ## Getting Started
 
+Recommended that one use this as a "starter project" for when one wants a NextJS app that also uses AWS Cognito for their user management. In most cases, unless you are contributing to improving this starter project, you will want to just copy the repo (e.g., download a zip of it into a folder representing your own new project), and go to town on it.
+
 Not completely automated, but only a few simple steps right now, though again, you may want to edit the aws-infrastructure components as well to put better prefixes on assets that better fit your planned app.
 ```
 npm install
