@@ -1,3 +1,4 @@
+// ui/auth/login-form.tsx
 "use client";
 
 import { lusitana } from "@/ui/fonts";
@@ -11,9 +12,19 @@ import { Button } from "@/ui/button";
 import { useFormState, useFormStatus } from "react-dom";
 import { handleSignIn } from "@/lib/cognitoActions";
 import Link from "next/link";
+import { useRef } from "react";
+import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
   const [errorMessage, dispatch] = useFormState(handleSignIn, undefined);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
+
+  const handleForgotPassword = () => {
+    const email = emailRef.current?.value ?? "";
+    router.push(`/auth/reset-password/submit?email=${encodeURIComponent(email)}`);
+  };
+  
   return (
     <form action={dispatch} className="space-y-3">
       <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8">
@@ -30,6 +41,7 @@ export default function LoginForm() {
             </label>
             <div className="relative">
               <input
+                ref={emailRef}
                 className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
                 id="email"
                 type="email"
@@ -63,13 +75,14 @@ export default function LoginForm() {
         </div>
         <LoginButton />
         <div className="flex justify-center">
-          <Link
-            href="/auth/reset-password/submit"
-            className="mt-2 cursor-pointer text-blue-500"
+          <button
+            type="button"
+            onClick={handleForgotPassword}
+            className="mt-2 cursor-pointer text-blue-500 underline"
           >
             Forgot password? Click here.
-          </Link>
-        </div>
+          </button>
+        </div>        
         <div className="flex justify-center">
           <Link
             href="/auth/signup"

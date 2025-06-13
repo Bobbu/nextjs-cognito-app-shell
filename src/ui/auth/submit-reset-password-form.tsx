@@ -1,3 +1,4 @@
+// ui/auth/submit-reset-password-form.tsx
 "use client";
 
 import { lusitana } from "@/ui/fonts";
@@ -9,8 +10,11 @@ import { ArrowRightIcon } from "@heroicons/react/20/solid";
 import { Button } from "@/ui/button";
 import { useFormState, useFormStatus } from "react-dom";
 import { handleResetPassword } from "@/lib/cognitoActions";
+import { useSearchParams } from 'next/navigation';
 
 export default function SubmitResetPasswordFrom() {
+  const searchParams = useSearchParams();
+  const defaultEmail = searchParams.get('email') ?? '';
   const [errorMessage, dispatch] = useFormState(handleResetPassword, undefined);
   return (
     <form action={dispatch} className="space-y-3">
@@ -32,6 +36,7 @@ export default function SubmitResetPasswordFrom() {
                 id="email"
                 type="email"
                 name="email"
+                defaultValue={defaultEmail}
                 placeholder="Enter your email address"
                 required
               />

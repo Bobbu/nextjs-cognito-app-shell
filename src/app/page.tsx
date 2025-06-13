@@ -1,3 +1,4 @@
+// app/layout.tsx
 import AcmeLogo from "@/ui/acme-logo";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
