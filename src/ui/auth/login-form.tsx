@@ -1,3 +1,4 @@
+// ui/auth/login-form.tsx
 "use client";
 
 import { lusitana } from "@/ui/fonts";
@@ -13,6 +14,8 @@ import { handleSignIn } from "@/lib/cognitoActions";
 import Link from "next/link";
 import { useRef } from "react";
 import { useRouter } from "next/navigation";
+import FormField from "@/ui/components/FormField"; // 
+
 
 export default function LoginForm() {
   const [errorMessage, dispatch] = useFormState(handleSignIn, undefined);
@@ -20,7 +23,7 @@ export default function LoginForm() {
   const router = useRouter();
 
   const handleForgotPassword = () => {
-    const email = emailRef.current?.value ?? "";
+    const email = emailRef.current?.value ?? "no value";
     router.push(`/auth/reset-password/submit?email=${encodeURIComponent(email)}`);
   };
 
@@ -31,49 +34,30 @@ export default function LoginForm() {
           Please log in to continue.
         </h1>
         <div className="w-full">
+
           {/* Email */}
-          <div>
-            <label
-              htmlFor="email"
-              className="mb-3 mt-5 block text-xs font-medium text-gray-900 dark:text-white"
-            >
-              Email
-            </label>
-            <div className="relative">
-              <input
-                ref={emailRef}
-                id="email"
-                name="email"
-                type="email"
-                required
-                placeholder="Enter your email address"
-                className="peer block w-full rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 py-[9px] pl-10 text-sm text-black dark:text-white outline-2 placeholder:text-gray-500 dark:placeholder:text-gray-400"
-              />
-              <AtSymbolIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 dark:text-gray-300 peer-focus:text-gray-900 dark:peer-focus:text-white" />
-            </div>
-          </div>
+          <FormField
+            id="email"
+            type="email"
+            label="Email"
+            placeholder="Enter your email address"
+            Icon={AtSymbolIcon}
+            name="email"
+            ref={emailRef}
+            required
+          />
 
           {/* Password */}
-          <div className="mt-4">
-            <label
-              htmlFor="password"
-              className="mb-3 mt-5 block text-xs font-medium text-gray-900 dark:text-white"
-            >
-              Password
-            </label>
-            <div className="relative">
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                minLength={6}
-                placeholder="Enter password"
-                className="peer block w-full rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 py-[9px] pl-10 text-sm text-black dark:text-white outline-2 placeholder:text-gray-500 dark:placeholder:text-gray-400"
-              />
-              <KeyIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 dark:text-gray-300 peer-focus:text-gray-900 dark:peer-focus:text-white" />
-            </div>
-          </div>
+          <FormField
+            id="password"
+            type="password"
+            label="Password"
+            placeholder="Enter password"
+            Icon={KeyIcon}
+            name="password"
+            required
+            minLength={6}
+          />
         </div>
 
         <LoginButton />

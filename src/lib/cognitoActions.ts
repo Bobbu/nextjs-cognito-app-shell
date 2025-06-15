@@ -1,3 +1,4 @@
+// lib/cognitoActions.ts
 import { redirect } from "next/navigation";
 import {
   signUp,
@@ -74,7 +75,7 @@ export async function handleConfirmSignUp(
   } catch (error) {
     return getErrorMessage(error);
   }
-  redirect("/auth/login");
+  redirect("/dashboard");
 }
 
 export async function handleSignIn(
