@@ -1,4 +1,4 @@
-import { authConfig } from "@/app/amplify-cognito-config";
+import { authConfig } from "@/lib/amplify-config";
 import { NextServer, createServerRunner } from "@aws-amplify/adapter-nextjs";
 import { fetchAuthSession, getCurrentUser } from "aws-amplify/auth/server";
 
