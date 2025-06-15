@@ -11,7 +11,7 @@ import { ArrowRightIcon } from "@heroicons/react/20/solid";
 import { Button } from "@/ui/button";
 import { useFormState, useFormStatus } from "react-dom";
 import { handleConfirmSignUp } from "@/lib/cognitoActions";
-import SendVerificationCode from "./send-verification-code-form";
+import SendVerificationCode from "./SendVerificationCode";
 
 export default function ConfirmSignUpForm() {
   const [errorMessage, dispatch] = useFormState(handleConfirmSignUp, undefined);

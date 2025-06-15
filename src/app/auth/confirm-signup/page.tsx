@@ -1,4 +1,4 @@
-import ConfirmSignUpForm from "@/ui/auth/confirm-signup-form";
+import ConfirmSignUpForm from "@/ui/auth/ConfirmSignUpForm";
 
 export default function LoginPage() {
   return <ConfirmSignUpForm />;
