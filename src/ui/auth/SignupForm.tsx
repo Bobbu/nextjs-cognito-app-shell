@@ -13,7 +13,7 @@ import { Button } from "@/ui/button";
 import { useFormState, useFormStatus } from "react-dom";
 import { handleSignUp } from "@/lib/cognitoActions";
 import Link from "next/link";
-import FormField from "@/ui/components/FormField"; // 
+import FormField from "@/ui/components/FormField";
 
 export default function SignUpForm() {
   const [errorMessage, dispatch] = useFormState(handleSignUp, undefined);
@@ -26,31 +26,31 @@ export default function SignUpForm() {
         <div className="w-full space-y-4">
           <FormField
             id="name"
-            type="text"
+            name="name"
             label="Name"
+            type="text"
             placeholder="Enter your name"
             Icon={UserCircleIcon}
             minLength={4}
-            name="name"
             required
           />
           <FormField
             id="email"
+            name="email"
             type="email"
             label="Email"
             placeholder="Enter your email address"
             Icon={AtSymbolIcon}
-            name="email"
             required
           />
           <FormField
             id="password"
+            name="password"
             type="password"
             label="Password"
             placeholder="Enter password"
             Icon={KeyIcon}
             minLength={6}
-            name="password"
             required
           />
         </div>

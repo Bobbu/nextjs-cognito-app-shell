@@ -14,7 +14,7 @@ import { handleSignIn } from "@/lib/cognitoActions";
 import Link from "next/link";
 import { useRef } from "react";
 import { useRouter } from "next/navigation";
-import FormField from "@/ui/components/FormField"; // 
+import FormField from "@/ui/components/FormField"; 
 
 
 export default function LoginForm() {
@@ -38,11 +38,11 @@ export default function LoginForm() {
           {/* Email */}
           <FormField
             id="email"
+            name="email"
             type="email"
             label="Email"
             placeholder="Enter your email address"
             Icon={AtSymbolIcon}
-            name="email"
             ref={emailRef}
             required
           />
@@ -50,11 +50,11 @@ export default function LoginForm() {
           {/* Password */}
           <FormField
             id="password"
+            name="password"
             type="password"
             label="Password"
             placeholder="Enter password"
             Icon={KeyIcon}
-            name="password"
             required
             minLength={6}
           />
