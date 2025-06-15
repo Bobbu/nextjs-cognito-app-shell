@@ -1,5 +1,7 @@
+// app/amplify-cognito-config.ts
 "use client";
 
+import { useEffect } from "react";
 import { Amplify, type ResourcesConfig } from "aws-amplify";
 
 export const authConfig: ResourcesConfig["Auth"] = {
@@ -9,13 +11,15 @@ export const authConfig: ResourcesConfig["Auth"] = {
   },
 };
 
-Amplify.configure(
-  {
-    Auth: authConfig,
-  },
-  { ssr: true }
-);
-
 export default function ConfigureAmplifyClientSide() {
+  useEffect(() => {
+    Amplify.configure(
+      {
+        Auth: authConfig,
+      },
+      { ssr: true }
+    );
+  }, []);
+
   return null;
 }
