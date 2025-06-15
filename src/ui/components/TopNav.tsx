@@ -2,16 +2,17 @@
 "use client";
 
 import Link from "next/link";
-import AcmeLogo from "@/ui/acme-logo";
+import ResizableLogo from "./ResizableLogo";
+// import AcmeLogo from "@/ui/acme-logo";
 import useAuthUser from "@/app/hooks/use-auth-user";
 
 export default function TopNav() {
   const user = useAuthUser();
 
   return (
-    <nav className="flex items-center justify-between p-4 bg-white dark:bg-gray-900 shadow">
-      <div className="text-xl font-semibold text-gray-800 dark:text-white">
-        <AcmeLogo />
+    <nav className="flex items-center justify-between px-4 py-2 md:py-4 bg-white dark:bg-gray-900 shadow min-h-[80px]">
+     <div className="flex items-center space-x-4">
+        <ResizableLogo size={100} />
       </div>
       <div className="flex space-x-6 text-sm md:text-base">
         <Link href="/about" className="text-gray-800 dark:text-white hover:underline">
