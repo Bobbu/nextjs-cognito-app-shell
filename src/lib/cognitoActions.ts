@@ -107,7 +107,7 @@ export async function handleSignOut() {
   } catch (error) {
     console.log(getErrorMessage(error));
   }
-  redirect("/auth/login");
+  redirect("/");
 }
 
 export async function handleUpdateUserAttributes(

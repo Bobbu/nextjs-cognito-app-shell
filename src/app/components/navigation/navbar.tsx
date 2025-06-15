@@ -1,4 +1,4 @@
-// components/navigation/Navbar.js
+// app/components/navigation/navbar.tsx
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 

@@ -3,7 +3,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { inter } from "@/ui/fonts";
 import ConfigureAmplifyClientSide from "./amplify-cognito-config";
-import { Providers } from './providers'
+import { Providers } from "./providers";
+import TopNav from "@/ui/components/TopNav"; // 👈 Add this import
 
 export const metadata: Metadata = {
   title: "Next.js Cognito Authentication",
@@ -20,6 +21,7 @@ export default function RootLayout({
       <body className={`${inter.className} antialiased bg-white text-black dark:bg-gray-900 dark:text-white`}>
         <ConfigureAmplifyClientSide />
         <Providers>
+          <TopNav /> {/* 👈 Insert TopNav here */}
           {children}
         </Providers>
       </body>
