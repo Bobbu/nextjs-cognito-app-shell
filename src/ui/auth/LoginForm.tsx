@@ -1,4 +1,4 @@
-// ui/auth/login-form.tsx
+// ui/auth/LoginForm.tsx
 "use client";
 
 import { lusitana } from "@/ui/fonts";
