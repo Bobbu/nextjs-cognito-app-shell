@@ -2,7 +2,8 @@
 "use client";
 
 import Link from "next/link";
-import AcmeLogo from "@/ui/acme-logo";
+// import AcmeLogo from "@/ui/acme-logo";
+import ResponsiveLogo from "@/ui/components/ResponsiveLogo";
 import useAuthUser from "@/app/hooks/use-auth-user";
 
 export default function TopNav() {
@@ -11,7 +12,7 @@ export default function TopNav() {
   return (
     <nav className="flex items-center justify-between p-4 bg-white dark:bg-gray-900 shadow">
       <div className="text-xl font-semibold text-gray-800 dark:text-white">
-        <AcmeLogo />
+        <ResponsiveLogo />
       </div>
       <div className="flex space-x-6 text-sm md:text-base">
         <Link href="/about" className="text-gray-800 dark:text-white hover:underline">
