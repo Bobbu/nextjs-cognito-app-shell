@@ -18,14 +18,11 @@ export default function ResponsiveLogo() {
 
   return (
     <Link href="/" className="block w-auto max-w-xs">
-      <Image
+      <img
         src={logoSrc}
-        alt="Company Logo"
-        width={500}
-        height={200}
-        className="w-full h-auto"
-        priority
-      />
+        alt="Site Logo"
+        style={{ maxHeight: "100px", height: "auto", width: "auto" }}
+      />{" "}
     </Link>
   );
 }
