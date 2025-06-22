@@ -16,6 +16,15 @@
 # Without this flag, your deployment would fail if IAM resources are declared
 # with names or advanced privileges.
 #
+
+# Validate input
+if [ -z "$1" ]; then
+  echo "❌ Usage: $0 <prefix>"
+  exit 1
+fi
+
+PREFIX=$1
+
 #
 # Show which account ID and alias we are using.
 echo "Account ID: $(aws sts get-caller-identity --query Account --output text)"
@@ -23,29 +32,17 @@ echo "Alias: $(aws iam list-account-aliases --query AccountAliases[0] --output t
 #
 # Set script variables
 TEMPLATE_FILE="cognito-auth.yaml"
-STACK_NAME="asi-auth-stack"
-PROJECT_NAME="asiApp"
-DOMAIN_PREFIX="asi-login"
+STACK_NAME="${PREFIX}-auth-stack"
+PROJECT_NAME="${PREFIX}App"
+DOMAIN_PREFIX="${PREFIX}-login"
 REGION="us-east-1" 
 
 echo "Using AWS region: $REGION"
 
 # Check if stack exists. Delete if it does.
 echo "Checking for existing stack: $STACK_NAME"
-STACK_EXISTS=$(aws cloudformation describe-stacks --stack-name "$STACK_NAME" --region "$REGION" 2>/dev/null)
-
-if [ $? -eq 0 ]; then
-  USER_POOL_ID=$(aws cognito-idp list-user-pools --max-results 60 \
-  --query "UserPools[?Name=='asiApp-userpool'].Id" --output text)
-  echo "User Pool ID: $USER_POOL_ID"
-
-  aws cognito-idp list-user-pool-clients \
-  --user-pool-id $USER_POOL_ID \
-  --max-results 60
-
-
+if aws cloudformation describe-stacks --stack-name "$STACK_NAME" --region "$REGION" >/dev/null 2>&1; then
   echo "⚠️ Stack '$STACK_NAME' already exists."
-
   read -p "❓ Do you want to delete and redeploy it? (y/n): " confirm
   if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
     echo "🛑 Deployment cancelled."
@@ -58,7 +55,6 @@ if [ $? -eq 0 ]; then
   aws cloudformation wait stack-delete-complete --stack-name "$STACK_NAME" --region "$REGION"
   echo "✅ Stack deleted."
 fi
-
 # Deploy new stack
 echo "Deploying new Cognito stack: $STACK_NAME"
 
@@ -70,13 +66,43 @@ aws cloudformation deploy \
 
 if [ $? -eq 0 ]; then
   echo "✅ Deployment successful!"
-  USER_POOL_ID=$(aws cognito-idp list-user-pools --max-results 60 \
-  --query "UserPools[?Name=='asiApp-userpool'].Id" --output text)
-  echo "User Pool ID: $USER_POOL_ID"
   
-  aws cognito-idp list-user-pool-clients \
-  --user-pool-id $USER_POOL_ID \
-  --max-results 60
+  # Some logic to await the readiness of the new user pool.
+echo "⏳ Waiting for Cognito User Pool to become available..."
+
+  for i in {1..10}; do
+    USER_POOL_ID=$(aws cognito-idp list-user-pools --max-results 60 \
+      --query "UserPools[?Name=='${PROJECT_NAME}-user-pool'].Id" --output text)
+
+    if [ -n "$USER_POOL_ID" ]; then
+      break
+    fi
+
+    echo "🔄 Still waiting... ($i)"
+    sleep 2
+  done
+
+  if [ -z "$USER_POOL_ID" ]; then
+    echo "❌ Timed out waiting for Cognito User Pool to be created."
+    exit 1
+  fi
+
+  # If we got here, then the user pool is now accessible.  
+  USER_POOL_ID=$(aws cognito-idp list-user-pools --max-results 60 \
+  --query "UserPools[?Name=='${PROJECT_NAME}-user-pool'].Id" --output text)
+
+  USER_POOL_CLIENT_ID=$(aws cognito-idp list-user-pool-clients \
+    --user-pool-id "$USER_POOL_ID" \
+    --max-results 60 \
+    --query "UserPoolClients[0].ClientId" --output text)
+
+  echo "User Pool ID: $USER_POOL_ID"
+  echo "User Pool Client ID: $USER_POOL_CLIENT_ID"
+
+  echo ""
+  echo "✅ Paste the following into your .env file:"
+  echo "NEXT_PUBLIC_USER_POOL_ID=$USER_POOL_ID"
+  echo "NEXT_PUBLIC_USER_POOL_CLIENT_ID=$USER_POOL_CLIENT_ID"
 
 else
   echo "❌ Deployment failed."

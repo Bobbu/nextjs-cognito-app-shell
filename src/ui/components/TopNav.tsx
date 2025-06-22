@@ -2,7 +2,6 @@
 "use client";
 
 import Link from "next/link";
-// import AcmeLogo from "@/ui/acme-logo";
 import ResponsiveLogo from "@/ui/components/ResponsiveLogo";
 import useAuthUser from "@/app/hooks/use-auth-user";
 

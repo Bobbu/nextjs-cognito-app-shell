@@ -44,7 +44,7 @@ Resources:
   UserPool:
     Type: AWS::Cognito::UserPool
     Properties:
-      UserPoolName: !Sub '${ProjectName}-userpool'
+      UserPoolName: !Sub '${ProjectName}-user-pool'
       AutoVerifiedAttributes: [email]
       UsernameAttributes: [email]
       Schema:
@@ -67,13 +67,6 @@ Resources:
           RequireSymbols: false
 
   # User Groups
-  FreeTierGroup:
-    Type: AWS::Cognito::UserPoolGroup
-    Properties:
-      GroupName: FreeTier
-      UserPoolId: !Ref UserPool
-      Description: Default group for all new users
-
   PaidTierGroup:
     Type: AWS::Cognito::UserPoolGroup
     Properties:
