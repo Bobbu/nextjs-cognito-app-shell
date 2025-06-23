@@ -15,8 +15,6 @@ export default function Profile() {
       </div>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mt-8">
         <UpdateEmailForm />
-      </div>
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mt-8">
         <ThemeSwitch />
       </div>
     </main>
