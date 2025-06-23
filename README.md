@@ -21,7 +21,7 @@ npm install
 # account/ID profile active. There are various commands to explore which 
 # account will be referenced by "$ aws" commands.
 cd aws-infrastructure-as-code
-./deploy-cognito-auth.sh
+./deploy-cognito-auth.sh <Your-Prefix>
 cd ..
 
 cp .env.sample .env
@@ -48,6 +48,18 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+
+Other things to consider: 
+
+1. I tried bringing the project up to what was now the @Latest of both Next and React, but failed miserably, and ended up rolling back to Next.js 14.1.4. I suspect there will be some vulnerabilities whihc will drive another try. All I can say is that flexible Auth is a bear and a huge time sync.
+
+1. Be sure to change out the public/logo-light.png and public/logo-dark.png with your preferred logos. 
+
+1. The Contact Us page is set up but not wired. A future improvement might be to optionally set up SES on the same AWS account to be able to have it wired and ready to go once a project is established.
+
+1. The theme is still a bit scraggly, left over form the Vercel Next Tutorial. I think it deserves some super clean-up and standardizing so that all the page and layout files don't have a bunc hof Tailwind in them. As nice as Tailwind is, no one wants to read 20 or so class modifiers when just rrying to get a functional layout.
+
+1. One place the theme is a mess is the dashboard sidenav, when on a small screen, does not go hamburger and instead goes permanently stacked and visible.  Yuck. Another big todo, but of course, perhaps people don't want a dashboard so it might not be an issue.
 
 ## Learn More
 
