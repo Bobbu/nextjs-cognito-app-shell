@@ -24,12 +24,15 @@ cd aws-infrastructure-as-code
 ./deploy-cognito-auth.sh <Your-Prefix>
 cd ..
 
-cp .env.sample .env
-# MANUAL STEP: Edit the .env file to include the NEXT_USER_POOL_ID and the NEXT_USER_POOL_CLIENT_ID values.
+cp .env.example .env
+#
+# MANUAL STEP: Edit the .env file to include the NEXT_USER_POOL_ID 
+#              and the NEXT_USER_POOL_CLIENT_ID values.
 
 # Launch it to localhost:3000
 npm run dev
 ```
+After that you can go to town, changing logo, wiring up Contact US, etc.
 
 If you are using different tools other than NPM, you can run the dev server in other ways...
 
