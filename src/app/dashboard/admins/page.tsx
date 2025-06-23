@@ -1,12 +1,12 @@
-import { lusitana } from "@/ui/fonts";
-
 export default function AdminArea() {
-  return <main>
-            <div className="flex w-full items-center justify-between mb-4">
-              <h1 className={`${lusitana.className} text-2xl`}>Admin Area</h1>
-            </div>
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              <p>You only get here is you are a member of the Admins group.</p>
-            </div>
-         </main>;
+  return (
+    <main className="max-w-3xl mx-auto px-6 py-12">
+      <h1 className="text-4xl font-bold mb-6">Admin Area</h1>
+      <div className="space-y-4">
+        <p className="text-lg leading-relaxed text-gray-700 dark:text-gray-300">
+          You get here only if you are a member of the Admins group.
+        </p>
+      </div>
+    </main>
+  );
 }

@@ -57,7 +57,7 @@ export default function SignUpForm() {
         <SignUpButton />
         <div className="flex justify-center">
           <Link href="/auth/login" className="mt-2 cursor-pointer text-blue-500">
-            Already have an account? Log in.
+            Already have an account? Sign in.
           </Link>
         </div>
         {errorMessage && (

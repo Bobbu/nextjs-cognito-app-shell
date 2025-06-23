@@ -2,8 +2,15 @@
 "use client";
 
 import Link from "next/link";
+import {
+  InformationCircleIcon,
+  EnvelopeIcon,
+  ArrowRightCircleIcon,
+  Squares2X2Icon,
+} from "@heroicons/react/24/solid";
 import ResponsiveLogo from "@/ui/components/ResponsiveLogo";
 import useAuthUser from "@/app/hooks/use-auth-user";
+import UserMenu from "@/ui/components/UserMenu";
 
 export default function TopNav() {
   const user = useAuthUser();
@@ -13,26 +20,47 @@ export default function TopNav() {
       <div className="text-xl font-semibold text-gray-800 dark:text-white">
         <ResponsiveLogo />
       </div>
-      <div className="flex space-x-6 text-sm md:text-base">
-        <Link href="/about" className="text-gray-800 dark:text-white hover:underline">
-          About
+      <div className="flex items-center space-x-6 text-sm md:text-base">
+        <Link
+          href="/about"
+          className="text-gray-800 dark:text-white hover:underline"
+        >
+          <span className="flex items-center space-x-2">
+            <InformationCircleIcon className="w-5 h-5 text-gray-500 dark:text-gray-300" />
+            <span>About</span>
+          </span>
         </Link>
-        <Link href="/contact-us" className="text-gray-800 dark:text-white hover:underline">
-          Contact Us
+        <Link
+          href="/contact-us"
+          className="text-gray-800 dark:text-white hover:underline"
+        >
+          <span className="flex items-center space-x-2">
+            <EnvelopeIcon className="w-5 h-5 text-gray-500 dark:text-gray-300" />
+            <span>Contact Us</span>
+          </span>
         </Link>
         {user ? (
-          <Link
-            href="/dashboard"
-            className="text-blue-600 dark:text-blue-400 font-semibold hover:underline"
-          >
-            Dashboard
-          </Link>
+          <>
+            <Link
+              href="/dashboard"
+              className="text-gray-800 dark:text-white hover:underline"
+            >
+          <span className="flex items-center space-x-2">
+            <Squares2X2Icon className="w-5 h-5 text-gray-500 dark:text-gray-300" />
+            <span>Dashboard</span>
+          </span>
+            </Link>
+            <UserMenu />
+          </>
         ) : (
           <Link
             href="/auth/login"
-            className="text-blue-600 dark:text-blue-400 font-semibold hover:underline"
+            className="text-gray-800 dark:text-white hover:underline"
           >
-            Login
+          <span className="flex items-center space-x-2">
+            <ArrowRightCircleIcon className="w-5 h-5 text-gray-500 dark:text-gray-300" />
+            <span>Sign In</span>
+          </span>
           </Link>
         )}
       </div>

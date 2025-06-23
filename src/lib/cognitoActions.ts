@@ -107,7 +107,8 @@ export async function handleSignOut() {
   } catch (error) {
     console.log(getErrorMessage(error));
   }
-  redirect("/");
+  // TODO Confirm that clients can do this redirect using the likes of router.push("/");
+  // TODO redirect("/");
 }
 
 export async function handleUpdateUserAttributes(

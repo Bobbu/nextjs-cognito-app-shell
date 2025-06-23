@@ -31,7 +31,7 @@ export default function LoginForm() {
     <form action={dispatch} className="space-y-3">
       <div className="flex-1 rounded-lg bg-gray-50 dark:bg-gray-800 px-6 pb-4 pt-8">
         <h1 className={`${lusitana.className} mb-3 text-2xl text-gray-900 dark:text-white`}>
-          Please log in to continue.
+          Please sign in to continue.
         </h1>
         <div className="w-full">
 
@@ -94,7 +94,7 @@ function LoginButton() {
 
   return (
     <Button className="mt-4 w-full" aria-disabled={pending}>
-      Log in <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
+      Sign In <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
     </Button>
   );
 }
