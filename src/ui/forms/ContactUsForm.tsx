@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { generateMathChallenge } from "@/lib/mathChallenge";
 import FormField from "@/ui/components/FormField";
 import { AtSymbolIcon, CalculatorIcon, EnvelopeIcon, PhoneIcon, UserIcon, BuildingOfficeIcon } from "@heroicons/react/24/outline";
-
+import { CONTACT_US_ENDPOINT } from "@/lib/constants";
 export default function ContactUsForm() {
   const [challenge, setChallenge] = useState({ question: "", answer: 0 });
   const [status, setStatus] = useState<null | {
@@ -48,7 +48,7 @@ export default function ContactUsForm() {
 
     try {
       const res = await fetch(
-        "https://kethe2pjjb.execute-api.us-east-1.amazonaws.com/prod/contact",
+        CONTACT_US_ENDPOINT,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

@@ -94,10 +94,10 @@ cd aws-infrastructure-as-code
 ./deploy-ses-contact-us.sh <prefix> <s3-bucket-name> <lambda-zip-path> <verified-email>
 ```
 
-For example:
+For example, mine for Any Stupid Idea looks like this:
 
 ```bash
-./deploy-ses-contact-us.sh myapp my-lambda-artifacts-bucket contact-handler.zip team@example.com
+./deploy-ses-contact-us.sh asi asi-deploy-assets ./lambda asi@catalyst.technology
 ```
 
 This will:

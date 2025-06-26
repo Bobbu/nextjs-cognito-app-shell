@@ -1,5 +1,5 @@
 #!/bin/bash
-CONTACT_US_ENDPOINT="https://kethe2pjjb.execute-api.us-east-1.amazonaws.com/prod/contact"
+CONTACT_US_ENDPOINT="https://csm52xd2a6.execute-api.us-east-1.amazonaws.com/prod/contact"
 
 curl -i -X OPTIONS $CONTACT_US_ENDPOINT \
   -H "Origin: http://localhost:3000" \

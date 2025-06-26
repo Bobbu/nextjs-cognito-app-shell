@@ -1,0 +1,1 @@
+export const CONTACT_US_ENDPOINT = "https://csm52xd2a6.execute-api.us-east-1.amazonaws.com/prod/contact";

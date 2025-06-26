@@ -100,7 +100,7 @@ echo "     → Update the value of CONTACT_US_ENDPOINT to:"
 echo "       export const CONTACT_US_ENDPOINT = \"$ENDPOINT\""
 echo ""
 echo "  2. ./aws-infrastructure-as-code/test-curl.sh"
-echo "     → Replace the URL used in both the OPTIONS and POST commands with:"
+echo "     → Replace the URL used in the constant CONTACT_US_ENDPOINT with:"
 echo "       $ENDPOINT"
 
 echo -e "\n👆 You can usually ⌘+click these paths in your editor or terminal to open them directly.\n"
