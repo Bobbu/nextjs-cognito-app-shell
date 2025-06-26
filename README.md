@@ -64,6 +64,64 @@ Other things to consider:
 
 1. One place the theme is a mess is the dashboard sidenav, when on a small screen, does not go hamburger and instead goes permanently stacked and visible.  Yuck. Another big todo, but of course, perhaps people don't want a dashboard so it might not be an issue.
 
+## Contact Us Infrastructure Setup (SES + Lambda + API Gateway)
+
+This stack wires up infrastructure for the "Contact Us" form handler using AWS SES, Lambda, and API Gateway.
+
+### Prerequisites
+
+* AWS CLI is installed and configured (`aws configure`)
+* A verified email address in SES (manual step, see below)
+
+### Step 1: Verify a Destination Email with SES
+
+Amazon SES requires all email recipients to be verified in **Sandbox Mode** (which is the default in most new AWS accounts).
+
+1. Go to the [SES Console](https://console.aws.amazon.com/ses/home).
+2. Navigate to **Verified identities**.
+3. Click **Create identity** and select **Email address**.
+4. Enter your desired recipient email (e.g., `team@example.com`) and click **Create identity**.
+5. Check your inbox and click the verification link.
+6. Once verified, you can use this address as the value of the `VerifiedEmail` parameter in deployment.
+
+You can skip this step if your SES account is already in **production mode** (i.e., not sandboxed).
+
+### Step 3: Deploy the Stack
+
+
+```bash
+cd aws-infrastructure-as-code 
+./deploy-ses-contact-us.sh <prefix> <s3-bucket-name> <lambda-zip-path> <verified-email>
+```
+
+For example:
+
+```bash
+./deploy-ses-contact-us.sh myapp my-lambda-artifacts-bucket contact-handler.zip team@example.com
+```
+
+This will:
+
+* Create the S3 bucket if needed
+* Create and upload your ZIP
+* Deploy a CloudFormation stack named `<prefix>-ses-contact-stack`
+* Output a usable API endpoint for your Contact Us form
+
+### Step 4: Hook It Up
+
+Use the generated API Gateway endpoint in your Contact Us form (ui/forms/ContactUsForm.tsx) frontend code. It should POST JSON like:
+
+```json
+{
+  "email": "bobbu@example.com",
+  "message": "Just wanted to say hi!"
+}
+```
+### Minimizng Your Messages Going to Junk Mail 
+
+Automated emailers are notorious for getting labeled as junk by various services. There are a number of things tyou can do to prevent your important "Contact Us" messages from getting lost in junk. First, you can take it one step further and just write messages received into a database you control. Short of that, if just using SES as we offer here, you can follow the guideliunes outliend in this
+[Email Deliverability Checklist](docs/email_deliverability_checklist.md) for more.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

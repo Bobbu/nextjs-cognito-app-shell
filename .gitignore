@@ -5,6 +5,9 @@ node_modules/
 .next/
 out/
 
+# infrastructure working files (e.g., virtual environment)
+aws-infrastructure-as-code/lambda/.venv/
+
 # Logs
 npm-debug.log*
 yarn-debug.log*

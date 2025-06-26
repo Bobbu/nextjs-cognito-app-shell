@@ -1,0 +1,137 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  CloudFormation template to set up an SES-based Contact Us handler with Lambda and API Gateway.
+
+Parameters:
+  ProjectPrefix:
+    Type: String
+    Description: Prefix to apply to all named resources
+
+  LambdaS3Bucket:
+    Type: String
+    Description: S3 bucket where the Lambda code is stored
+
+  LambdaS3Key:
+    Type: String
+    Description: Path to the ZIP file for the Lambda code
+
+  VerifiedEmail:
+    Type: String
+    Description: Verified SES email address to receive contact messages
+
+Resources:
+
+  ContactUsExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "${ProjectPrefix}-contact-lambda-role"
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonSESFullAccess
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+
+  ContactUsLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub "${ProjectPrefix}-contact-us-handler"
+      Handler: contact_us_handler.contact_us_handler
+      Role: !GetAtt ContactUsExecutionRole.Arn
+      Code:
+        S3Bucket: !Ref LambdaS3Bucket
+        S3Key: !Ref LambdaS3Key
+      Runtime: python3.11
+      Timeout: 10
+      Environment:
+        Variables:
+          SES_FROM_ADDRESS: !Ref VerifiedEmail
+          SES_TO_ADDRESS: !Ref VerifiedEmail  
+
+  ContactUsApi:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: !Sub "${ProjectPrefix}-contact-api"
+      Description: API Gateway for Contact Us form submission
+
+  ContactUsResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt ContactUsApi.RootResourceId
+      PathPart: contact
+      RestApiId: !Ref ContactUsApi
+
+  ContactUsPostMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ContactUsApi
+      ResourceId: !Ref ContactUsResource
+      HttpMethod: POST
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub
+          - arn:aws:apigateway:${Region}:lambda:path/2015-03-31/functions/${LambdaArn}/invocations
+          - Region: !Ref "AWS::Region"
+            LambdaArn: !GetAtt ContactUsLambda.Arn
+
+  ContactUsOptionsMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ContactUsApi
+      ResourceId: !Ref ContactUsResource
+      HttpMethod: OPTIONS
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type'"
+              method.response.header.Access-Control-Allow-Methods: "'OPTIONS,POST'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            ResponseTemplates:
+              application/json: ''
+      MethodResponses:
+        - StatusCode: 200
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Methods: true
+            method.response.header.Access-Control-Allow-Origin: true
+
+
+  ContactUsLambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref ContactUsLambda
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ContactUsApi}/*/POST/contact"
+
+  ContactUsDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: 
+      - ContactUsPostMethod
+      - ContactUsOptionsMethod
+    Properties:
+      RestApiId: !Ref ContactUsApi
+      StageName: prod
+      Description: !Sub "Troubled CORS Deploys"
+
+Outputs:
+  ApiEndpoint:
+    Description: Endpoint to POST Contact Us messages
+    Value: !Sub "https://${ContactUsApi}.execute-api.${AWS::Region}.amazonaws.com/prod/contact"
+
+  LambdaFunctionName:
+    Value: !Ref ContactUsLambda
+
+  LambdaExecutionRole:
+    Value: !Ref ContactUsExecutionRole

@@ -21,6 +21,9 @@
 # ✅ Hosted UI will be available at:
 #
 # https://asi-login.auth.us-east-1.amazoncognito.com/login
+#
+# Not that you need it -- we are not relying on hosted auth.
+#
 # 🔒 IAM roles allow authenticated/unauthenticated access to your app via Cognito.
 # 🎯 Callback and logout URLs can be adjusted to your app domain.
 #
