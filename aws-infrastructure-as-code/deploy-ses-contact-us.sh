@@ -90,5 +90,17 @@ ENDPOINT=$(aws cloudformation describe-stacks \
   --query "Stacks[0].Outputs[?OutputKey=='ApiEndpoint'].OutputValue" \
   --output text)
 
-echo -e "\n✅ Stack deployed. Use this endpoint in your form:"
-echo "$ENDPOINT"
+echo -e "\n✅ Stack deployed successfully!"
+echo -e "📬 Use this endpoint in your code and tests:"
+echo -e "\n  $ENDPOINT\n"
+
+echo "🛠️  Please update the following files to reflect the new endpoint:"
+echo "  1. ./lib/constants.ts"
+echo "     → Update the value of CONTACT_US_ENDPOINT to:"
+echo "       export const CONTACT_US_ENDPOINT = \"$ENDPOINT\""
+echo ""
+echo "  2. ./aws-infrastructure-as-code/test-curl.sh"
+echo "     → Replace the URL used in both the OPTIONS and POST commands with:"
+echo "       $ENDPOINT"
+
+echo -e "\n👆 You can usually ⌘+click these paths in your editor or terminal to open them directly.\n"

@@ -1,8 +1,11 @@
-curl -i -X OPTIONS https://kethe2pjjb.execute-api.us-east-1.amazonaws.com/prod/contact \
+#!/bin/bash
+CONTACT_US_ENDPOINT="https://kethe2pjjb.execute-api.us-east-1.amazonaws.com/prod/contact"
+
+curl -i -X OPTIONS $CONTACT_US_ENDPOINT \
   -H "Origin: http://localhost:3000" \
   -H "Access-Control-Request-Method: POST"
 
-curl -X POST https://kethe2pjjb.execute-api.us-east-1.amazonaws.com/prod/contact \
+curl -X POST $CONTACT_US_ENDPOINT \
   -H "Content-Type: application/json" \
   -d '{
     "email": "example@example.com",
